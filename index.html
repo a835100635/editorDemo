@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <script src="./index.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 800px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+        }
+
+        .pic {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            margin: 25px 50px;
+            border: 1px dashed #cccccc;
+            padding: 25px;
+        }
+
+        .info {
+            margin: 25px 50px;
+            border: 1px dashed #cccccc;
+            padding: 25px;
+        }
+
+        button {
+            margin-left: 50px;
+        }
+
+        body>p {
+            width: 100%;
+            padding: 0 25px;
+            box-sizing: border-box;
+        }
+
+        a {
+            color: #999999;
+        }
+
+        #box {
+            width: 80%;
+            /* background-color: #f1f1f1; */
+            border: 1px solid #ccc;
+        }
+
+        /** top菜单*/
+        #div_top {
+            min-height: 50px;
+            width: 100%;
+            display: flex;
+            background-color: #f1f1f1;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .memu-l {
+            position: relative;
+            height: 50px;
+            width: 50px;
+        }
+
+        .memu-l:hover>.memu-l-btn_ {
+            display: block;
+        }
+
+        .memu-l>a {
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .memu-l>a:hover {
+            background: #cccccc57;
+        }
+
+        .memu-l-btn_ {
+            position: absolute;
+            top: 49px;
+            border: 1px solid #ccc;
+            border-top: 1px solid transparent;
+            display: none;
+            background: white;
+        }
+
+        .memu-l-list {
+            line-height: 2;
+            cursor: pointer;
+        }
+
+        .memu-l-list>p {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+
+        .memu-l-list a {
+            display: block;
+            height: 100%;
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .memu-l-list:hover {
+            background: #cccccc57;
+        }
+
+        /** 编辑区域*/
+        #div_bottom {
+            height: 400px;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        #area {
+            min-height: 100%;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            outline: none;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pic">
+        <p style="display: flex;justify-content: center;margin-bottom: 15px;">
+            <button onclick="exportHtml()">输出代码</button>
+            <button onclick="visibleHtml()">渲染</button>
+        </p>
+        <div id="box"></div>
+    </div>
+    <p>代码</p>
+    <div class="pic">
+        <div id="innerhtml"></div>
+    </div>
+    <p>渲染效果</p>
+    <div class="info">
+        <div id="visible"></div>
+    </div>
+    <script>
+        let editor = new Editor('#box')
+        editor.createDom()
+
+        //获取编辑文本
+        function exportHtml() {
+            console.log('获取编辑文本')
+            let html = editor.exportHtml()
+            $('#innerhtml').text(html)
+            console.log(html);
+        }
+
+        //渲染文本
+        function visibleHtml() {
+            console.log('渲染文本')
+            editor.visibleHtml()
+        }
+
+    </script>
+</body>
+
+</html>
