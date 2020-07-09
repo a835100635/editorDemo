@@ -11,9 +11,9 @@ class Editor {
                 title: 'C',
                 name: 'foreColor',
                 list: [{
-                        title: 'blue',
-                        val: '#007ACC'
-                    },
+                    title: 'blue',
+                    val: '#007ACC'
+                },
                     {
                         title: 'red',
                         val: '#E21918'
@@ -28,9 +28,9 @@ class Editor {
                 title: 'H',
                 name: 'FontSize',
                 list: [{
-                        title: 'H1',
-                        val: '6'
-                    },
+                    title: 'H1',
+                    val: '6'
+                },
                     {
                         title: 'H2',
                         val: '5'
@@ -75,55 +75,52 @@ class Editor {
         $(this.config).each(function (i, n) {
             var menu = ''
             if (!n.list) {
-                menu = `<div class='memu-l'><a href="#" class='memu-l-btn' name='${n.name}'>${n.title}</a></div>`
+                menu = `<div class='memu-l'><i class='memu-l-btn' name='${n.name}'>${n.title}</i></div>`
             } else {
                 var str = ''
                 if (n.name === 'foreColor') {
                     $(n.list).each(function (j, k) {
-                        str = str + `<div class='memu-l-list' name='${n.name}' val='${k.val}' ><a  href="#" name='${n.name}' val='${k.val}' style='color:${k.val}'>${k.title}</a></div>`
+                        str = str + `<div class='memu-l-list' name='${n.name}' val='${k.val}' ><i class='memu-l-btn' name='${n.name}' val='${k.val}' style='color:${k.val}'>${k.title}</i></div>`
                     })
                 } else if (n.name === 'FontSize') {
                     $(n.list).each(function (j, k) {
-                        str = str + `<div class='memu-l-list'><${k.title}><a  href="#" name='${n.name}' val='${k.val}'>${k.title}</a></${k.title}></div>`
+                        str = str + `<div class='memu-l-list'><${k.title}><i class='memu-l-btn' name='${n.name}' val='${k.val}'>${k.title}</i></${k.title}></div>`
                     })
                 }
-                menu = `<div class='memu-l'><a href="#" class='memu-l-btn' name='${n.name}'>${n.title}</a><div class="memu-l-btn_"> ${str}</div></div>`
+                menu = `<div class='memu-l'><i class='memu-l-btn' name='${n.name}'>${n.title}</i><div class="memu-l-btn_"> ${str}</div></div>`
                 // console.log(i, menu)
             }
             $("#div_top").append(menu)
         })
 
-        //阻止回车保留上一行格式 
-        $('#area').on('keydown', function (e) {
-            let keycode = (e.keyCode ? e.keyCode : e.which);
-            console.log(keycode)
-            if (keycode === 13) { //是否敲了回车键
-                console.log('点击了回车')
-                e.preventDefault();
-            }
-        })
 
-        //按键 记录焦点最后的位置
+
+        //按键 插入dom 记录焦点最后的位置
         $('#area').on('keyup', function (e) {
-            let keycode = (e.keyCode ? e.keyCode : e.which);
-            if (keycode === 13) { //是否敲了回车键
-                self.insertDom()
-            }
             self.saveRangeAddress()
         })
+
 
         //点击 记录焦点最后的位置
         $('#area').on('click', function () {
-            self.saveRangeAddress()
+            const selection = window.getSelection ? window.getSelection() : document.getSelection()
+            if (selection) {
+                // console.log('click 保存')
+                self.saveRangeAddress()
+            }
         })
 
         //功能
-        $('a').on('click', function (e) {
-            //防止直接点击按钮未保存焦点位置
-            // self.lastAddress !== '' ? self.saveRangeAddress() : ''
+        $('.memu-l-btn').on('click', function (e) {
+            //阻止默认事件
+            e.preventDefault();
             //设置最后焦点位置
             self.setRangeAddress()
+            //执行功能
             self.execCommand($(e.target).attr("name"), false, $(e.target).attr("val"))
+            //发生改变后在执行一次保存焦点
+            // console.log('memu-l-btn 保存')
+            self.saveRangeAddress()
         })
     }
 
@@ -138,7 +135,8 @@ class Editor {
         // 获取selection对象 保存焦点
         const selection = window.getSelection ? window.getSelection() : document.getSelection()
         self.lastAddress = selection.getRangeAt(0)
-        console.log('保存', self.lastAddress)
+        console.log('保存******', self.lastAddress)
+        console.log( self.lastAddress.startContainer.length, self.lastAddress.endOffset)
     }
 
     // 设置焦点最后所处位置
@@ -146,15 +144,16 @@ class Editor {
         const self = this
         //清除焦点 还原最后焦点的位置
         const selection = window.getSelection ? window.getSelection() : document.getSelection()
-        selection.removeAllRanges()
-
+        $('#area').focus()
+        //判断是否具有getSelection对象
         if (selection) {
             // 判断是否有焦点最后位置
             if (self.lastAddress) {
-                console.log('存在++',self.lastAddress)
+                // console.log('存在++ 设置', window.getSelection().getRangeAt(0),self.lastAddress)
+                selection.removeAllRanges()
                 selection.addRange(self.lastAddress)
             } else {
-                console.log('不存在--',self.lastAddress)
+                // console.log('不存在-- 设置', self.lastAddress)
                 // 如果之前没有保存焦点则新建一个
                 const content = $('#area')[0]
                 const range = document.createRange()
@@ -167,24 +166,7 @@ class Editor {
             $('#area').focus()
         }
 
-        console.log('设置', self.lastAddress)
-    }
-
-    //回车插入无格式标签
-    insertDom(){
-        console.log('回车事件')
-        let p = '<p><br/></p>'
-        $("#area").append(p)
-         //设置输入焦点
-        var active =  $($("#area").children(':last-child')[0]).children(':first-child')[0]
-        console.log(active)
-        var range = document.createRange();
-        range.selectNodeContents(active);
-        range.collapse(false);
-        range.setEndAfter(active);
-        range.setStartAfter(active);
-        this.lastAddress = range;
-        this.setRangeAddress();
+        // console.log('设置', self.lastAddress)
     }
 
     //输出代码

@@ -46,7 +46,7 @@
             box-sizing: border-box;
         }
 
-        a {
+        .memu-l-btn {
             color: #999999;
         }
 
@@ -75,7 +75,7 @@
             display: block;
         }
 
-        .memu-l>a {
+        .memu-l>i {
             height: 100%;
             width: 100%;
             text-align: center;
@@ -86,7 +86,7 @@
             display: block;
         }
 
-        .memu-l>a:hover {
+        .memu-l>i:hover {
             background: #cccccc57;
         }
 
@@ -110,11 +110,12 @@
             width: 100%;
         }
 
-        .memu-l-list a {
+        .memu-l-list i {
             display: block;
             height: 100%;
             width: 100%;
             padding: 0 15px;
+            box-sizing: border-box;
         }
 
         .memu-l-list:hover {
@@ -169,7 +170,7 @@
 
         //渲染文本
         function visibleHtml() {
-            console.log('渲染文本')
+            // console.log('渲染文本')
             editor.visibleHtml()
         }
 
